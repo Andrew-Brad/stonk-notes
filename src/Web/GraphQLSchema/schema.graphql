@@ -1,0 +1,97 @@
+﻿schema {
+  query: Query
+  mutation: Mutation
+}
+
+type AddDayNotePayload {
+  id: Int!
+}
+
+type CreateDayNotePayload {
+  addDayNotePayload: AddDayNotePayload
+}
+
+type DayNote {
+  entryDate: Date!
+  summaryText: String!
+  noteText: String!
+  marketCondition: MarketCondition!
+  mood: Mood!
+  marketVolatility: MarketVolatility!
+}
+
+type Mutation @authorize {
+  createDayNote(input: CreateDayNoteInput!): CreateDayNotePayload! @cost(weight: "10")
+  updateDayNote(dayNoteInput: UpdateDayNoteInput!): UpdateDayNotePayload! @cost(weight: "10")
+}
+
+type Query @authorize {
+  dayNote(id: Int): DayNote @cost(weight: "10")
+}
+
+type UpdateDayNotePayload {
+  id: Int!
+}
+
+input AddDayNoteInput {
+  entryDate: Date!
+  summaryText: String!
+  noteText: String!
+  marketCondition: MarketCondition!
+  mood: Mood!
+  marketVolatility: MarketVolatility!
+}
+
+input CreateDayNoteInput {
+  dayNoteInput: AddDayNoteInput!
+}
+
+input UpdateDayNoteInput {
+  id: Int!
+  entryDate: Date!
+  summaryText: String!
+  noteText: String!
+  marketCondition: MarketCondition!
+  mood: Mood!
+  marketVolatility: MarketVolatility!
+}
+
+"Defines when a policy shall be executed."
+enum ApplyPolicy {
+  "Before the resolver was executed."
+  BEFORE_RESOLVER
+  "After the resolver was executed."
+  AFTER_RESOLVER
+  "The policy is applied in the validation step before the execution."
+  VALIDATION
+}
+
+enum MarketCondition {
+  UNKNOWN
+  BULLISH
+  BEARISH
+  NEUTRAL
+}
+
+enum MarketVolatility {
+  UNKNOWN
+  LOW
+  MODERATE
+  HIGH
+}
+
+enum Mood {
+  UNKNOWN
+  HAPPY
+  SAD
+  NEUTRAL
+}
+
+"The authorize directive."
+directive @authorize("The name of the authorization policy that determines access to the annotated resource." policy: String "Roles that are allowed to access the annotated resource." roles: [String!] "Defines when when the authorize directive shall be applied.By default the authorize directives are applied during the validation phase." apply: ApplyPolicy! = BEFORE_RESOLVER) repeatable on OBJECT | FIELD_DEFINITION
+
+"The purpose of the `cost` directive is to define a `weight` for GraphQL types, fields, and arguments. Static analysis can use these weights when calculating the overall cost of a query or response."
+directive @cost("The `weight` argument defines what value to add to the overall cost for every appearance, or possible appearance, of a type, field, argument, etc." weight: String!) on SCALAR | OBJECT | FIELD_DEFINITION | ARGUMENT_DEFINITION | ENUM | INPUT_FIELD_DEFINITION
+
+"The `Date` scalar represents an ISO-8601 compliant date type."
+scalar Date

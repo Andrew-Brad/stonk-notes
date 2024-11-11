@@ -1,0 +1,16 @@
+services:
+  postgres-stonknotes:
+    image: postgres:17-alpine
+    container_name: postgres_stonknotes_local    
+    environment:
+      POSTGRES_USER: stonknotes      # Set a username for the database
+      POSTGRES_PASSWORD: stonknotes  # Set a password for the database
+      POSTGRES_DB: stonknotes        # Initial database to be created
+    ports:
+      - "5440:5440"  # Map the desired port if you have other postgres instances already bound to 5432
+    volumes:
+      - stonknotes_local_dev_data:/var/lib/postgresql/data  # Persist data locally
+
+volumes:
+  stonknotes_local_dev_data:
+    driver: local  # Use a local volume for data persistence

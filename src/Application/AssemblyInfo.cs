@@ -1,0 +1,1 @@
+[assembly: StonkNotes.Common.ApplicationLayerAssembly]

@@ -1,0 +1,54 @@
+name: Build And Test
+run-name: ${{ github.triggering_actor }} triggered build on branch ${{ github.ref_name }} with commit SHA ${{ github.sha }}
+on:
+  push:
+    branches:
+      - '*'
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    services:
+      postgres-stonknotes:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_PASSWORD: stonknotes
+          POSTGRES_USER: stonknotes
+          POSTGRES_DB: stonknotes
+        ports:
+          - 5440:5432  # Note: Changed to map to standard Postgres port
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      # Step 1: Checkout the code
+      - name: 🛠️ Checkout Code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 1
+
+      # Step 2: Set up .NET SDK
+      - name: 🧰 Set up .NET SDK
+        uses: actions/setup-dotnet@v3
+        with:
+          global-json-file: global.json
+
+      # Step 3: Restore dependencies
+      - name: 📦 Restore Dependencies
+        run: dotnet restore
+
+      # Step 4: Build the application
+      - name: 🏗️ Build Application
+        run: dotnet build --configuration Release --no-restore
+
+      # Step 5: Run tests
+      - name: ✅ Run Tests
+        run: dotnet test --no-build --configuration Release --verbosity normal
+        env:
+          ConnectionStrings__DefaultConnection: "Host=localhost;Port=5440;Database=stonknotes;Username=stonknotes;Password=stonknotes"
