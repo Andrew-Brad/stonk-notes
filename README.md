@@ -1,6 +1,6 @@
 # Stonk Notes
 
-This is a reference application modeled after [Jason Taylor's Clean Architecture template in C#](https://github.com/jasontaylordev/CleanArchitecture).
+This is a reference application modeled after [Jason Taylor's Clean Architecture template in C#](https://github.com/jasontaylordev/CleanArchitecture). It's purpose is to act as a learning and demonstration tool for enterprise patterns in Asp.Net Core, using one flavor of Clean Architecture template. In some areas, I pivoted in implementation based on my own opinions and experience.
 
 It represents a Trading Journal application to help retail traders track Proft/Loss metrics, analyze trade performance, and facilitate retrospectives.
 
@@ -73,3 +73,19 @@ The SDL file is located in `src/Web/GraphQLSchema/schema.graphql`. It can be gen
 Todo: Explain use cases
 
 `dotnet new ca-usecase --name CreateTodoList --feature-name TodoLists --usecase-type command --return-type int`
+
+### Other Miscellaneous References
+
+Below are other Clean Architecture templates, all of which influenced technical decision-making in this project.
+
+| **Reference Project** | **Url** |
+|:---------------------:|:-------:|
+| Matthew Rense's Clean Architecture Sample via Pluralsight | [Reference Link][link1] |
+| Jason Taylor's Clean Architecture Reference Repo          | [Reference Link][link2] |
+| Vladimir Khorikov's DDD In Action Repo                    | [Reference Link][link3] |
+| Steve Smith's Clean Architecture Reference Repo           | [Reference Link][link4] |
+
+[link1]: https://app.pluralsight.com/library/courses/clean-architecture-patterns-practices-principles/exercise-files
+[link2]: https://github.com/jasontaylordev/CleanArchitecture
+[link3]: https://github.com/vkhorikov/DddInAction
+[link4]: https://github.com/ardalis/CleanArchitecture
